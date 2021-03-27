@@ -3,12 +3,14 @@ import _ from 'lodash';
 
 export const fetchPostsAndUsers = () => async (dispatch, getState) => {
   await dispatch(fetchPosts());
-  // before lodash syntax is in before lodash folder
-  _.chain(getState().posts)
-    .map('userId')
-    .uniq()
-    .forEach((id) => dispatch(fetchUser(id)))
-    .value();
+  // map returns back userId array
+  // [1,1,1,2,1,3,1,1,3,3,3,3,4,3,5,6,7,8,9,10]
+  // console.log(_.map(getState().posts, 'userId'));
+  const userIds = _.uniq(_.map(getState().posts, 'userId'));
+  console.log(userIds);
+  userIds.forEach((id) => {
+    dispatch(fetchUser(id));
+  });
 };
 
 export const fetchPosts = () => async (dispatch) => {
